@@ -3,19 +3,27 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 
-const ChessBoard = ({ pgn }) => {
+const ChessBoard = ({ gameDetails, oriantation }) => {
   const [game, setGame] = useState(new Chess());
   const [moveIndex, setMoveIndex] = useState(0);
   const [moves, setMoves] = useState([]);
   const gameRef = useRef(new Chess());
 
   useEffect(() => {
+    if (!gameDetails || !gameDetails.pgn) {
+      setGame(new Chess());
+      setMoves([]);
+      setMoveIndex(0);
+      gameRef.current = new Chess();
+      return;
+    }
+
     const newGame = new Chess();
-    newGame.loadPgn(pgn);
+    newGame.loadPgn(gameDetails.pgn);
     setMoves(newGame.history({ verbose: true }));
     gameRef.current = new Chess();
-    setMoveIndex(0); // Reset move index when new PGN is loaded
-  }, [pgn]);
+    setMoveIndex(0);
+  }, [gameDetails]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -38,7 +46,15 @@ const ChessBoard = ({ pgn }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [moveIndex, moves]);
 
-  return <Chessboard position={game.fen()} />;
+  return (
+    <Chessboard 
+      position={game.fen()} 
+      animationDuration={200} 
+      boardWidth={600} 
+      arePiecesDraggable={false} 
+      boardOrientation={oriantation} 
+    />
+  );
 };
 
 export default ChessBoard;

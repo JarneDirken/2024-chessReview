@@ -9,17 +9,40 @@ const PGNUploader = ({ onUpload }) => {
   };
 
   const handleUpload = () => {
-    onUpload(pgn);
+    if (!pgn.trim()) {
+      alert('Please provide a valid PGN.');
+      return;
+    }
+
+    const gameDetails = extractGameDetails(pgn);
+    onUpload(gameDetails);
+  };
+
+  const extractGameDetails = (pgn) => {
+    const lines = pgn.split('\n');
+    const details = {};
+    lines.forEach(line => {
+      const match = line.match(/^\[(\w+)\s+"(.+)"\]$/);
+      if (match) {
+        details[match[1]] = match[2];
+      }
+    });
+    return {
+      pgn,
+      whiteName: details.White || 'Unknown',
+      blackName: details.Black || 'Unknown',
+      whiteElo: details.WhiteElo || 'Unknown',
+      blackElo: details.BlackElo || 'Unknown',
+    };
   };
 
   return (
     <div>
       <textarea
-        rows="20"
-        cols="50"
         value={pgn}
         onChange={handleInputChange}
         placeholder="Paste your PGN text here..."
+        style={{ width: '400px', height: '200px' }} // Adjust the width and height as needed
       />
       <br />
       <button onClick={handleUpload}>Upload PGN</button>
