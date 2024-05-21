@@ -23,7 +23,7 @@ const App = () => {
 
   return (
     <div className="flex overflow-hidden mt-2">
-      <ChessBoard gameDetails={gameDetails} orientationMode={orientationMode} onFenChange={handleFenChange} />
+      <ChessBoard gameDetails={gameDetails} oriantation={orientationMode} onFenChange={handleFenChange} />
       <div>
         <GameOverView gameDetails={gameDetails} toggleOrientation={toggleOrientation} />
         <PGNUploader onUpload={handleUpload} />
