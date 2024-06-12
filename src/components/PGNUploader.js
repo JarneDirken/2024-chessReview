@@ -33,6 +33,7 @@ const PGNUploader = ({ onUpload }) => {
       blackName: details.Black || 'Unknown',
       whiteElo: details.WhiteElo || 'Unknown',
       blackElo: details.BlackElo || 'Unknown',
+      startingFen: details.FEN  || '',
     };
   };
 
